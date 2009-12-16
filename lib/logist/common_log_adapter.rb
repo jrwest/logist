@@ -8,8 +8,9 @@ Logist::LogAdapter.build(:common) do
     entry_data = {}
     fields = [:client, :rfc1413, :userid, :day, :month, :year, :hour, :minute, :second, :tzn, :httpmethod, :resource, :protocol, :status_code, :response_size, :timestamp]
     field_data[1..field_data.size - 1].each_with_index do |field, index|
-      entry_data[fields[index]] = field
-      end
+      entry_data[fields[index]] = field.strip
+    end
+    entry_data[:timestamp] = "#{entry_data[:day]}/#{entry_data[:month]}/#{entry_data[:year]}:#{entry_data[:hour]}:#{entry_data[:minute]}:#{entry_data[:second]} #{entry_data[:tzn]}"
     Logist::Entry.new(entry_data)
   end
 end

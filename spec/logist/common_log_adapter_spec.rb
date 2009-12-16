@@ -44,6 +44,31 @@ module Logist
          adapter = LogAdapter.common_adapter
          adapter.parse_entry('client rfc1413 userid [01/Jan/2010:00:00:00 +0400] "GET /a.html HTTP/1.1" 200 1493').should be_instance_of(Logist::Entry)
        end
+       it "should correctly parse all fields and additionally merge the datetime fields in a timestamp fiend" do
+         Entry.should_receive(:new).with({:client => 'client',
+                                          :rfc1413 => 'rfc1413',
+                                          :userid => 'userid',
+                                          :day => '01',
+                                          :month => 'Jan',
+                                          :year => '2010',
+                                          :hour => '00',
+                                          :minute => '00',
+                                          :second => '00',
+                                          :tzn => '+0400',
+                                          :httpmethod => 'GET',
+                                          :resource => '/a.html',
+                                          :protocol => 'HTTP/1.1',
+                                          :status_code => '200',
+                                          :response_size => '1493',
+                                          :timestamp => '01/Jan/2010:00:00:00 +0400'})
+         adapter = LogAdapter.common_adapter
+         adapter.parse_entry('client rfc1413 userid [01/Jan/2010:00:00:00 +0400] "GET /a.html HTTP/1.1" 200 1493')
+       end
+       it "should create the timestamp field in a format that Entry can convert to a non nil instance" do
+         adapter = LogAdapter.common_adapter
+         entry = adapter.parse_entry('client rfc1413 userid [01/Jan/2010:00:00:00 +0400] "GET /a.html HTTP/1.1" 200 1493')
+         entry.timestamp.should_not be_nil
+       end
      end
    end
  end
