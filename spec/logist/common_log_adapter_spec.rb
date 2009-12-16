@@ -69,6 +69,12 @@ module Logist
          entry = adapter.parse_entry('client rfc1413 userid [01/Jan/2010:00:00:00 +0400] "GET /a.html HTTP/1.1" 200 1493')
          entry.timestamp.should_not be_nil
        end
+       it "should convert emtpy entries (-) to nil" do
+         pending
+       end
+       it "should be able to handle an entry with no protocol" do
+        pending
+       end
      end
    end
  end
