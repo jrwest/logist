@@ -15,7 +15,7 @@ module Logist
            'client rfc1413 userid [01/Jan/2010:00:00:00 -0400] "GET /a.html HTTP/1.1" 200 1493',
            '172.93.45.2 - - [01/Jan/2009:12:00:00 +0530] "GET /images/b.gif" 302 193',
            '172.93.45.2 - - [02/Feb/2009:12:00:00 -0400] "GET /images/c.gif HTTP/1.1" 200 193',
-           'my.host.name - - [02/Mar/2010:14:30:21 -0400] "POST /services HTTP/1.1/" 200 1493'
+           'my.host.name - - [02/Mar/2010:14:30:21 -0400] "POST /services HTTP/1.1" 200 1493'
          ]
          valid_entries.each do |entry|
            adapter.should be_valid_entry(entry)
