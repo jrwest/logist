@@ -85,7 +85,17 @@ module Logist
       end
       context "multiple logs" do
         it "should take multiple log IO objects and treat them as one" do
-          pending
+          log_file1 = StringIO.new
+          log_file2 = StringIO.new
+          log_file1.puts '172.93.45.2 - - [01/Jan/2009:12:00:00 +0530] "GET /images/b.gif" 200 193'
+          log_file1.puts '172.93.45.2 - - [01/Jan/2009:12:00:00 +0530] "GET /a.html" 200 193'
+          log_file2.puts '127.0.0.1 - - [01/Jan/2009:12:00:00 +0530] "GET /b.html" 200 193'
+          log_file2.puts '193.92.5.2 - - [01/Jan/2009:12:00:00 +0530] "GET /images/a.gif" 302 193'
+          log_file1.rewind
+          log_file2.rewind
+          parser = Parser.new(:common)
+          entries = parser.parse_entries(log_file1, log_file2)
+          entries.size.should == 4
         end
       end
     end

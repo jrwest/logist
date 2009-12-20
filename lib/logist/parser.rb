@@ -1,11 +1,13 @@
 module Logist
   class Parser
-    def parse_entries(log, &block)
+    def parse_entries(*logs, &block)
       entries = []
-      log.each_line do |line|
-        entry = @adapter.parse_entry(line)
-        entries << entry if entry
-        yield entry if block_given?
+      logs.each do |log|
+        log.each_line do |line|
+          entry = @adapter.parse_entry(line)
+          entries << entry if entry
+          yield entry if block_given?
+        end
       end
       entries
     end
