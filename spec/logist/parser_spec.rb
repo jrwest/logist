@@ -17,21 +17,25 @@ module Logist
       end
     end
     context "parsing" do
+      before(:each) do
+        @parser = Parser.new(:common)  
+      end
       context "single log" do
+        before(:each) do
+          @log_file = StringIO.new
+        end
         it "should return an empty array if the log is empty" do
-          log_file = StringIO.new
-          parser = Parser.new(:common)
-          entries = parser.parse_entries(log_file)
+          entries = @parser.parse_entries(@log_file)
           entries.should == []
         end
         context "valid entries" do
+          before(:each) do
+            @log_file.puts '172.93.45.2 - - [01/Jan/2009:12:00:00 +0530] "GET /images/b.gif" 302 193'
+            @log_file.puts '172.93.45.2 - - [02/Feb/2009:12:00:00 -0400] "GET /images/c.gif HTTP/1.1" 200 193'
+            @log_file.rewind
+          end
           it "should return an array of Entry objects parsed from valid entries" do
-            log_file = StringIO.new
-            log_file.puts '172.93.45.2 - - [01/Jan/2009:12:00:00 +0530] "GET /images/b.gif" 302 193'
-            log_file.puts '172.93.45.2 - - [02/Feb/2009:12:00:00 -0400] "GET /images/c.gif HTTP/1.1" 200 193'
-            log_file.rewind
-            parser = Parser.new(:common)
-            entries = parser.parse_entries(log_file)
+            entries = @parser.parse_entries(@log_file)
             entries.size.should == 2
             entries.each do |entry|
               entry.raw[:client].should == '172.93.45.2'
@@ -39,16 +43,9 @@ module Logist
               entry.raw[:userid].should be_nil
             end
           end
-
           it "should take a block and pass each entry to the block" do
-            log_file = StringIO.new
-            log_file.puts '172.93.45.2 - - [01/Jan/2009:12:00:00 +0530] "GET /images/b.gif" 302 193'
-            log_file.puts '172.93.45.2 - - [02/Feb/2009:12:00:00 -0400] "GET /images/c.gif HTTP/1.1" 200 193'
-            log_file.rewind
-            parser = Parser.new(:common)
-
             count = 0
-            parser.parse_entries(log_file) do |entry|
+            @parser.parse_entries(@log_file) do |entry|
               entry.raw[:client].should == '172.93.45.2'
               entry.raw[:rfc1413].should be_nil
               entry.raw[:userid].should be_nil
@@ -58,13 +55,13 @@ module Logist
           end
         end
         context "handling invalid entries" do
+          before(:each) do
+            @log_file.puts '172.93.45.2 - - [01/Jan/2009:12:00:00 +0530] "GET /images/b.gif" 302 193'
+            @log_file.puts 'Invalid Line'
+            @log_file.rewind
+          end
           it "should return an array of Entry objects with invalid entries not included" do
-            log_file = StringIO.new
-            log_file.puts '172.93.45.2 - - [01/Jan/2009:12:00:00 +0530] "GET /images/b.gif" 302 193'
-            log_file.puts 'Invalid Line'
-            log_file.rewind
-            parser = Parser.new(:common)
-            entries = parser.parse_entries(log_file)
+            entries = @parser.parse_entries(@log_file)
             entries.size.should == 1
             entries.each do |entry|
               entry.raw[:client].should == '172.93.45.2'
@@ -72,15 +69,9 @@ module Logist
               entry.raw[:userid].should be_nil
             end
           end
-
           it "should pass invalid entries as nil to the block if given" do
-            log_file = StringIO.new
-            log_file.puts '172.93.45.2 - - [01/Jan/2009:12:00:00 +0530] "GET /images/b.gif" 302 193'
-            log_file.puts 'Invalid Line'
-            log_file.rewind
-            parser = Parser.new(:common)
             entries = []
-            parser.parse_entries(log_file) do |entry|
+            @parser.parse_entries(@log_file) do |entry|
               entries << entry
             end
             entries.size.should be 2
@@ -99,8 +90,7 @@ module Logist
           log_file2.puts '193.92.5.2 - - [01/Jan/2009:12:00:00 +0530] "GET /images/a.gif" 302 193'
           log_file1.rewind
           log_file2.rewind
-          parser = Parser.new(:common)
-          entries = parser.parse_entries(log_file1, log_file2)
+          entries = @parser.parse_entries(log_file1, log_file2)
           entries.size.should == 4
         end
       end
