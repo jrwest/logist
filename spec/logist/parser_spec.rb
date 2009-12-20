@@ -53,11 +53,33 @@ module Logist
         end
         context "handling invalid entries" do
           it "should return an array of Entry objects with invalid entries not included" do
-            pending
+            log_file = StringIO.new
+            log_file.puts '172.93.45.2 - - [01/Jan/2009:12:00:00 +0530] "GET /images/b.gif" 302 193'
+            log_file.puts 'Invalid Line'
+            log_file.rewind
+            parser = Parser.new(:common)
+            entries = parser.parse_entries(log_file)
+            entries.size.should == 1
+            entries.each do |entry|
+              entry.raw[:client].should == '172.93.45.2'
+              entry.raw[:rfc1413].should be_nil
+              entry.raw[:userid].should be_nil
+            end
           end
 
           it "should pass invalid entries as nil to the block if given" do
-            pending
+            log_file = StringIO.new
+            log_file.puts '172.93.45.2 - - [01/Jan/2009:12:00:00 +0530] "GET /images/b.gif" 302 193'
+            log_file.puts 'Invalid Line'
+            log_file.rewind
+            parser = Parser.new(:common)
+            entries = []
+            parser.parse_entries(log_file) do |entry|
+              entries << entry
+            end
+            entries.size.should be 2
+            entries.first.should be_instance_of(Logist::Entry)
+            entries.last.should be_nil
           end
         end
       end

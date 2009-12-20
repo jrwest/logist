@@ -4,7 +4,7 @@ module Logist
       entries = []
       log.each_line do |line|
         entry = @adapter.parse_entry(line)
-        entries << entry 
+        entries << entry if entry
         yield entry if block_given?
       end
       entries
