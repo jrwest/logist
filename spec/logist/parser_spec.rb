@@ -18,6 +18,12 @@ module Logist
     end
     context "parsing" do
       context "single log" do
+        it "should return an empty array if the log is empty" do
+          log_file = StringIO.new
+          parser = Parser.new(:common)
+          entries = parser.parse_entries(log_file)
+          entries.should == []
+        end
         context "valid entries" do
           it "should return an array of Entry objects parsed from valid entries" do
             log_file = StringIO.new
