@@ -24,3 +24,10 @@ Supported Log Types:
  * Common Log Format (:common)
  * Combined Log Format (:combined)
 
+Future Support Planned For:
+ * W3C Extended Format
+ * Three Log Format
+ * Git logs
+ * SVN logs
+ * Rails logs
+
