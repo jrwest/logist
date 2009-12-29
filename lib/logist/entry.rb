@@ -30,6 +30,20 @@ module Logist
     def timestamp
     	@timestamp ||= timestamp_to_date 
     end
+
+    def to_csv
+      raw.values.sort.inject("") do |str, value|
+        str + "\"#{value}\","
+      end.sub(/.$/, '') + "\n"
+    end
+
+    def to_s
+      s = ""
+      raw.sort {|a, b| a.to_s <=> b.to_s}.each do |key, value|
+        s += "#{key}: #{value}\n"
+      end
+      s
+    end
     
     def year
       timestamp.year if timestamp

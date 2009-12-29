@@ -164,8 +164,40 @@ module Logist
     end
 
     context "output" do
-      it "should output of block key/value pairs when passed to puts"
-      it "should output a csv line of values" 
+
+      context "to string" do
+        it "should output of block key/value pairs when passed to puts" do
+          entry1 = Entry.new(:key1 => "value 1", :key2 => "value 2", :key3 => "value 3")
+          entry2 = Entry.new(:key4 => "value 4", :key5 => "value 5")
+          entry1.to_s.should == <<-ENTRY
+key1: value 1
+key2: value 2
+key3: value 3
+ENTRY
+          entry2.to_s.should == <<-ENTRY
+key4: value 4
+key5: value 5
+ENTRY
+        end
+        it "should output keys in alphabetical order by default" do
+          entry = Entry.new(:key5 => 'a b c', :key6 => 'b c d', :key7 => 'd e f')
+          entry.to_s.should == <<-ENTRY
+key5: a b c
+key6: b c d
+key7: d e f
+ENTRY
+        end
+      end
+      context "to comma separated values string" do
+        it "should output a csv line of values" do
+          entry = Entry.new(:key1 => "value 1", :key2 => "value 2", :key3 => "value 3")
+          entry.to_csv.should == "\"value 1\",\"value 2\",\"value 3\"\n"
+        end
+        it "should output values in alphabetical order" do
+          entry = Entry.new(:key5 => 'a b c', :key6 => 'b c d', :key7 => 'd e f')
+          entry.to_csv.should == "\"a b c\",\"b c d\",\"d e f\"\n"
+        end
+      end
     end
   end
 end
