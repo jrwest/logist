@@ -1,0 +1,5 @@
+== Introduction
+
+Logist is a ruby library for handling log files. It parses log files line by line either returning an entire array or allowing line by line handling of the file.
+
+This library is currently in the early stages of development. Many higher level features are planned for later development.
