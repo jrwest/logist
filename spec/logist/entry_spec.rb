@@ -162,5 +162,10 @@ module Logist
       	end
       end
     end
+
+    context "output" do
+      it "should output of block key/value pairs when passed to puts"
+      it "should output a csv line of values" 
+    end
   end
 end
