@@ -3,18 +3,15 @@ module Logist
     attr_reader :raw
     
     def day_in_calendar_month
-      return unless timestamp
-      timestamp.mday
+      timestamp.mday if timestamp
     end
     
     def month_in_calendar_year
-      return unless timestamp
-      timestamp.month
+      timestamp.month if timestamp
     end
     
     def hour
-      return unless timestamp
-      timestamp.hour
+      timestamp.hour if timestamp
     end
     
     def initialize(raw_data = {})
@@ -22,8 +19,7 @@ module Logist
     end
     
     def minute
-      return unless timestamp
-      timestamp.min
+      timestamp.min if timestamp
     end
     
     def second
@@ -36,8 +32,7 @@ module Logist
     end
     
     def year
-      return unless timestamp
-      timestamp.year
+      timestamp.year if timestamp
     end
     
     private
