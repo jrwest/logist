@@ -197,6 +197,15 @@ ENTRY
           entry = Entry.new(:key5 => 'a b c', :key6 => 'b c d', :key7 => 'd e f')
           entry.to_csv.should == "\"a b c\",\"b c d\",\"d e f\"\n"
         end
+        context "sorting" do
+          it "should take an array of keys and output values in order given in array" do
+            pending
+          end
+          it "should ignore any keys not in the given array by default"
+          context "errors" do
+            it "should raise an error if the array contains a key not in the entry's raw data"
+          end
+        end
       end
     end
   end
