@@ -31,10 +31,17 @@ module Logist
     	@timestamp ||= timestamp_to_date 
     end
 
-    def to_csv
-      raw.values.sort.inject("") do |str, value|
-        str + "\"#{value}\","
-      end.sub(/.$/, '') + "\n"
+    def to_csv(sort_keys = [])
+      if sort_keys.size == 0
+        raw.values.sort.inject("") do |str, value|
+          str + "\"#{value}\","
+        end.sub(/.$/, '') + "\n"
+      else
+        sort_keys.inject("") do |str, key|
+          raise ArgumentError, "Key does not exist" unless raw[key] 
+          str + "\"#{raw[key]}\","
+        end.sub(/.$/, '') + "\n"
+      end
     end
 
     def to_s

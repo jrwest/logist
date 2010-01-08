@@ -197,13 +197,23 @@ ENTRY
           entry = Entry.new(:key5 => 'a b c', :key6 => 'b c d', :key7 => 'd e f')
           entry.to_csv.should == "\"a b c\",\"b c d\",\"d e f\"\n"
         end
+        it "should only quote necessary values (values containing spaces and quotes)"
         context "sorting" do
-          it "should take an array of keys and output values in order given in array" do
-            pending
+          before(:each) do
+            @entry = Entry.new(:key1 => "value 1", :key2 => "value 2", :key3 => "value 3")
           end
-          it "should ignore any keys not in the given array by default"
+          it "should take an array of keys and output values in order given in array" do
+            @entry.to_csv([:key3, :key1, :key2]).should == "\"value 3\",\"value 1\",\"value 2\"\n"
+          end
+          it "by default, should ignore any keys not in the given array" do
+            @entry.to_csv([:key3, :key1]).should == "\"value 3\",\"value 1\"\n"
+          end
           context "errors" do
-            it "should raise an error if the array contains a key not in the entry's raw data"
+            it "should raise an ArgumentError if the array contains a key not in the entry's raw data" do
+              lambda do
+                @entry.to_csv([:key3, :key4])   
+              end.should raise_error ArgumentError, "Key does not exist"
+            end
           end
         end
       end
