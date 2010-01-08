@@ -1,5 +1,33 @@
-== Introduction
+= Introduction
 
 Logist is a ruby library for handling log files. It parses log files line by line either returning an entire array or allowing line by line handling of the file.
 
 This library is currently in the early stages of development. Many higher level features are planned for later development.
+
+= Running Specs
+
+You can run all specs in nested format by simply running <tt>rake</tt>. To override any rspec command line options run <tt>rake spec SPEC_OPTS=[options ...]</tt>.
+To run a single spec file use <tt>rake spec SPEC=spec_file</tt>.
+
+= Log Adapters
+
+Logist supports multiple log types using adapters. Log adapters should not as practice be instantiated directly. Instead when instantiating a parser pass
+the appropriate log type (see the example below). Log types are recognized as ruby symbols. A list of currently available log types is also listed below.
+
+Creating a new parser using a log type
+<tt>
+  parser = Parser.new(:common)
+</tt>
+<em>If no log type is given when instantiating the parser the generic adapter will be used</em>
+
+Supported Log Types:
+ * Common Log Format (:common)
+ * Combined Log Format (:combined)
+
+Future Support Planned For:
+ * W3C Extended Format
+ * Three Log Format
+ * Git logs
+ * SVN logs
+ * Rails logs
+
