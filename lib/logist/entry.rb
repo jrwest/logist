@@ -30,6 +30,35 @@ module Logist
     def timestamp
     	@timestamp ||= timestamp_to_date 
     end
+
+    def to_csv(sort_keys = [])
+      if sort_keys.size == 0
+        values = raw.values.sort
+      else
+        values = sort_keys.inject([]) do |values_arr, key|
+          raise ArgumentError, "Key does not exist" unless raw[key]
+          values_arr << raw[key]  
+        end
+      end
+      values.inject("") do |str, value|
+        (value =~ /[,\s"]/) ? str + "\"#{value.gsub('"', "\\\"")}\"," : str + "#{value},"
+      end.sub(/.$/, '') + "\n"
+    end
+
+    def to_s(sort_keys = [])
+      s = ""
+      if sort_keys.size == 0
+        raw.sort {|a, b| a.to_s <=> b.to_s}.each do |key, value|
+          s += "#{key}: #{value}\n"
+        end
+      else
+        sort_keys.each do |key|
+          raise ArgumentError, "Key does not exist" unless raw[key]
+          s += "#{key}: #{raw[key]}\n"
+        end
+      end
+      s
+    end
     
     def year
       timestamp.year if timestamp
