@@ -197,7 +197,14 @@ ENTRY
           entry = Entry.new(:key5 => 'a b c', :key6 => 'b c d', :key7 => 'd e f')
           entry.to_csv.should == "\"a b c\",\"b c d\",\"d e f\"\n"
         end
-        it "should only quote necessary values (values containing spaces and quotes)"
+        it "should only quote necessary values (values containing spaces and commas)" do
+          entry = Entry.new(:key1 => 'value1', :key2 => 'value 2', :key3 => 'value,3')
+          entry.to_csv.should == "\"value 2\",\"value,3\",value1\n"
+        end
+        it "should escape double quotes" do
+          entry = Entry.new(:key1 => 'value"1"', :key2 => 'value2')
+          entry.to_csv.should == "\"value\\\"1\\\"\",value2\n"
+        end
         context "sorting" do
           before(:each) do
             @entry = Entry.new(:key1 => "value 1", :key2 => "value 2", :key3 => "value 3")

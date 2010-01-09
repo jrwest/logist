@@ -33,15 +33,16 @@ module Logist
 
     def to_csv(sort_keys = [])
       if sort_keys.size == 0
-        raw.values.sort.inject("") do |str, value|
-          str + "\"#{value}\","
-        end.sub(/.$/, '') + "\n"
+        values = raw.values.sort
       else
-        sort_keys.inject("") do |str, key|
-          raise ArgumentError, "Key does not exist" unless raw[key] 
-          str + "\"#{raw[key]}\","
-        end.sub(/.$/, '') + "\n"
+        values = sort_keys.inject([]) do |values_arr, key|
+          raise ArgumentError, "Key does not exist" unless raw[key]
+          values_arr << raw[key]  
+        end
       end
+      values.inject("") do |str, value|
+        (value =~ /[,\s"]/) ? str + "\"#{value.gsub('"', "\\\"")}\"," : str + "#{value},"
+      end.sub(/.$/, '') + "\n"
     end
 
     def to_s
