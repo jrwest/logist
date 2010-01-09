@@ -45,10 +45,17 @@ module Logist
       end.sub(/.$/, '') + "\n"
     end
 
-    def to_s
+    def to_s(sort_keys = [])
       s = ""
-      raw.sort {|a, b| a.to_s <=> b.to_s}.each do |key, value|
-        s += "#{key}: #{value}\n"
+      if sort_keys.size == 0
+        raw.sort {|a, b| a.to_s <=> b.to_s}.each do |key, value|
+          s += "#{key}: #{value}\n"
+        end
+      else
+        sort_keys.each do |key|
+          raise ArgumentError, "Key does not exist" unless raw[key]
+          s += "#{key}: #{raw[key]}\n"
+        end
       end
       s
     end

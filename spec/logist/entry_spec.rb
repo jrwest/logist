@@ -187,6 +187,31 @@ key6: b c d
 key7: d e f
 ENTRY
         end
+        context "sorting" do
+          before(:each) do
+            @entry = Entry.new(:key1 => "value 1", :key2 => "value 2", :key3 => "value 3")
+          end
+          it "should take an array of keys and output the key/value pairs in order given by array" do
+            @entry.to_s([:key3, :key1, :key2]).should == <<-ENTRY
+key3: value 3
+key1: value 1
+key2: value 2
+ENTRY
+          end
+          it "by default, should supress the output of any keys not included in the array" do
+            @entry.to_s([:key3, :key1]).should == <<-ENTRY
+key3: value 3
+key1: value 1
+ENTRY
+          end
+          context "errors" do
+            it "should raise an ArgumentError if the array contains a key not in the entry's raw data" do
+              lambda do
+                @entry.to_s([:key3, :key4])   
+              end.should raise_error ArgumentError, "Key does not exist"
+            end
+          end
+        end
       end
       context "to comma separated values string" do
         it "should output a csv line of values" do
