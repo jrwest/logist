@@ -230,6 +230,10 @@ ENTRY
           entry = Entry.new(:key1 => 'value"1"', :key2 => 'value2')
           entry.to_csv.should == "\"value\\\"1\\\"\",value2\n"
         end
+        it "should convert nil values to empty strings with no quotes" do
+          entry = Entry.new(:key1 => 'value1', :key2 => nil, :key3 => 'value3')
+          entry.to_csv.should == ",value1,value3\n"
+        end
         context "sorting" do
           before(:each) do
             @entry = Entry.new(:key1 => "value 1", :key2 => "value 2", :key3 => "value 3")
@@ -239,6 +243,10 @@ ENTRY
           end
           it "by default, should ignore any keys not in the given array" do
             @entry.to_csv([:key3, :key1]).should == "\"value 3\",\"value 1\"\n"
+          end
+          it "should convert nil values to empty strings with no quotes" do
+            entry = Entry.new(:key1 => 'value1', :key2 => 'value2', :key3 => nil)
+            entry.to_csv([:key1, :key3, :key2]).should == "value1,,value2\n"
           end
           context "errors" do
             it "should raise an ArgumentError if the array contains a key not in the entry's raw data" do

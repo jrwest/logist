@@ -33,10 +33,10 @@ module Logist
 
     def to_csv(sort_keys = [])
       if sort_keys.size == 0
-        values = raw.values.sort
+        values = raw.values.map{ |val| (val.nil?) ? '' : val}.sort
       else
         values = sort_keys.inject([]) do |values_arr, key|
-          raise ArgumentError, "Key does not exist" unless raw[key]
+          raise ArgumentError, "Key does not exist" unless raw.has_key?(key)
           values_arr << raw[key]  
         end
       end
