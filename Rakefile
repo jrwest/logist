@@ -19,7 +19,7 @@ task :default => [:spec]
 Spec::Rake::SpecTask.new do |t|
   t.warning = false
   t.rcov = false
-  t.spec_opts = ['--format nested']
+  t.spec_opts = ['--format nested', '--color']
 end
 
 namespace :gem do
