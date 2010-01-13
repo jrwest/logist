@@ -66,7 +66,7 @@ module Logist
     
     private
       def method_missing(method, *args, &block)
-      	super(method, *args, &block) unless @raw[method]
+      	super(method, *args, &block) unless @raw.has_key?(method)
       	@raw[method]
       end
       

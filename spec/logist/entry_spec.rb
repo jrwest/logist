@@ -22,15 +22,21 @@ module Logist
       	  @entry.raw[:field2].should == 'value 2'
       	  @entry.raw[:nofield].should be_nil
       	end
-      	it "should return values of keys passed as method names" do 
-      	  @entry.field.should == 'value'
-      	  @entry.field2.should == 'value 2'
-      	end
-      	it "should still throw an error if a method is called and key does not exist in raw data" do 
-          lambda do 
-            @entry.missing_field
-          end.should raise_error
-      	end
+        context "dot syntax" do
+          it "should return values of keys passed as method names" do
+      	    @entry.field.should == 'value'
+      	    @entry.field2.should == 'value 2'
+      	  end
+      	  it "should still throw an error if a method is called and key does not exist in raw data" do
+            lambda do
+              @entry.missing_field
+            end.should raise_error
+      	  end
+          it "should return nil for a field stored in raw as nil instead of throwing an error" do
+            entry = Entry.new(:nilfield => nil)
+            entry.nilfield.should be_nil
+          end
+        end
       	context "special fields" do 
       	  it "converts timestamp field to Time object when accessed using method call (does not modify original)" do 
       	    timestamped_entry = Entry.new(:timestamp => @december_1st)
