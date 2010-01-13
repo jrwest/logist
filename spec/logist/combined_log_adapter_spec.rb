@@ -67,8 +67,7 @@ module Logist
            @adapter.parse_entry('client rfc1413 userid [01/Jan/2010:00:00:00 +0400] "GET /a.html HTTP/1.1" 200 1493 "referrer" "user agent" "cookies"')
         end
         it "should return nil if the entry is invalid" do
-          adapter = LogAdapter.combined_adapter
-          adapter.parse_entry('invalid').should be_nil
+          @adapter.parse_entry('invalid').should be_nil
         end
         it "should correctly handle missing cookies field, setting values to nil" do
           Entry.should_receive(:new).with({:client => 'client',
