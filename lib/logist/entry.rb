@@ -23,8 +23,7 @@ module Logist
     end
     
     def second
-      return unless timestamp
-      timestamp.sec
+      timestamp.sec if timestamp
     end
     
     def timestamp
@@ -72,9 +71,8 @@ module Logist
       
       def timestamp_to_date 
       	return unless timestamp = @raw[:timestamp]
-      	date, hour, minute, second, timezone = timestamp.split(/[:\s]/)
-      	day, month, year = date.split('/')
-      	Time.mktime(year.to_i, %w[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec].index(month) + 1, day.to_i, hour.to_i, minute.to_i, second.to_i)
+      	day, month, year, hour, minute, second, timezone = timestamp.split(/[\/:\s]/)
+        Time.mktime(year.to_i, %w[Jan Feb Mar Apr May Jun Jul Aug Sep Oct Nov Dec].index(month) + 1, day.to_i, hour.to_i, minute.to_i, second.to_i)
       end
   end
 end
