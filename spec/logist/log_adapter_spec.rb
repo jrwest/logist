@@ -31,16 +31,12 @@ module Logist
     context "entries" do
       before(:each) do
         @adapter = LogAdapter.new
+        @valid_entries = ['not empty']
+        @invalid_entries = ['']
       end
-      context "#valid_entry?" do
-        it "should return true if entry is not an emtpy string" do
-          @adapter.should be_valid_entry('not empty')
-        end
-        it "should return false if entry is empty string (which is default argument value)" do
-          @adapter.should_not be_valid_entry
-          @adapter.should_not be_valid_entry('')
-        end
-      end
+      
+      it_should_behave_like "Any LogAdapter that can validate entries"
+      
       context "#parse_entry" do
         it "should return the same string passed if valid entry" do
           @adapter.parse_entry("entry").should == "entry"
