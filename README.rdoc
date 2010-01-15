@@ -14,17 +14,42 @@ To run a single spec file use <tt>rake spec SPEC=spec_file</tt>.
 Logist supports multiple log types using adapters. Log adapters should not as practice be instantiated directly. Instead when instantiating a parser pass
 the appropriate log type (see the example below). Log types are recognized as ruby symbols. A list of currently available log types is also listed below.
 
-Creating a new parser using a log type
-<tt>
+Creating a new parser using a log type:
+
   parser = Parser.new(:common)
-</tt>
+
+
+== Creating log adapters: 
+
+  The factory class LogAdapter provides a method LogAdapter.build to easily be adapter subclasses and add them to the factory
+  to create an adapter use:
+
+  Logist::LogAdapter.build(sym, superclass = Logist::LogAdapter, &block)
+
+  Any log adapter must respond to two methods:
+    * #valid_entry?(entry) - returns true if string, entry, is a valid entry for the log type
+    * #parse_entry(valid_entry) - returns nil if entry is invalid, can return any object but typically returns instance of Logist::Entry with parsed data
+
+  If either of these methods are not implemented they will be inherited from the parent class (Logist::LogAdapter)
+
+  Including code examples with rspec:
+
+    When creating a new log adapter please include code examples in the form of rspec examples as has been done for existing log examples.
+    To make life a little easier shared example groups have been provided.
+
+    Currently only the following shared example groups exist:
+        * it_should_behave_like "Any LogAdapter that can validate entries" - to use this you must include 2 instance variables in your example group (@valid_entries, @invalid_entries), both should be arrays
+
+    To see how these example groups are used see specs for existing adapters. More example groups are coming soon to make code examples for adapters painless to setup
+
+
 <em>If no log type is given when instantiating the parser the generic adapter will be used</em>
 
-Supported Log Types:
+== Supported Log Types:
  * Common Log Format (:common)
  * Combined Log Format (:combined)
 
-Future Support Planned For:
+== Future Support Planned For:
  * W3C Extended Format
  * Three Log Format
  * Git logs
