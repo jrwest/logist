@@ -6,10 +6,10 @@ GEM_FILES = %w[rakefile] + Dir.glob("{lib}/**/*")
 gem_spec = Gem::Specification.new do |spec|
   spec.name = 'logist'
   spec.version = '0.0.0'
-  spec.summary = ''
-  spec.description = ''
+  spec.summary = 'Log File Manipulation'
+  spec.description = 'Logist is a ruby library for handling log files. It parses log files line by line either returning an entire array or allowing line by line handling of the file.'
   spec.email = 'jordan.west@westwardwd.com'
-  spec.homepage = 'http://www.westwardwd.com'
+  spec.homepage = 'http://www.github.com/jrwest/logist'
   spec.authors = ['Jordan West']
   spec.files = GEM_FILES
 end
