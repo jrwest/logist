@@ -14,6 +14,11 @@ module Logist
       @rset.rules.should == []
       another_rset.rules.should == [some_rule]
     end
+    it "has a method to add rules" do
+      lambda {
+        @rset.add(mock(Rule))
+      }.should change { @rset.rules.size }.by(1)
+    end
     context "checking agains an entry" do
       let(:entry) { mock(Entry).as_null_object }
       let(:rule1) { mock(Rule).as_null_object }
