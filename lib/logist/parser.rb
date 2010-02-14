@@ -6,7 +6,9 @@ module Logist
         log.each_line do |line|
           entry = @adapter.parse_entry(line)
           entries << entry if entry
-          yield entry if block_given?
+          if block_given?
+            yield entry unless entry.nil?
+          end
         end
       end
       entries

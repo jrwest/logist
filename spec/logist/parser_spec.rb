@@ -69,14 +69,14 @@ module Logist
               entry.raw[:userid].should be_nil
             end
           end
-          it "should pass invalid entries as nil to the block if given" do
+          it "should not pass invalid entries to the block if given" do
             entries = []
             @parser.parse_entries(@log_file) do |entry|
               entries << entry
             end
-            entries.size.should be 2
+            entries.size.should be 1
             entries.first.should be_instance_of(Logist::Entry)
-            entries.last.should be_nil
+            entries.last.should be_instance_of(Logist::Entry)
           end
         end
       end
