@@ -15,6 +15,9 @@ module Logist
           Parser.new(:combined)
         end
       end
+      it "has an empty set of rulesets when instantiated" do
+        Parser.new(:common).rulesets.should == []
+      end
     end
     context "parsing" do
       before(:each) do
@@ -52,6 +55,44 @@ module Logist
               count += 1
             end
             count.should be 2
+          end
+          context "applying rulesets" do
+            let(:ruleset) {mock(RuleSet, :conformed? => true).as_null_object}
+            before(:each) do
+              @parser.entries_must_conform_to(ruleset)
+            end
+            it "has a method to add rulesets to itself" do
+              @parser.rulesets.should == [ruleset] 
+            end
+            it "includes any entry that conforms to all rulesets in the array retruned by #parse_entries" do 
+              entries = @parser.parse_entries(@log_file)
+              entries.size.should == 2
+              entries.each do |entry|
+                entry.raw[:client].should == '172.93.45.2'
+                entry.raw[:rfc1413].should be_nil
+                entry.raw[:userid].should be_nil
+              end
+            end
+            it "passes any entry that that conforms to all rulesets to the block passed to #parse_entries" do
+               count = 0
+                @parser.parse_entries(@log_file) do |entry|
+                  count += 1
+                end
+                count.should == 2
+            end
+            it "does not include entries that do not conform to any ruleset in array returned by #parse_entries" do
+              ruleset.stub!(:conformed?).and_return(false)
+              entries = @parser.parse_entries(@log_file)
+              entries.size.should == 0
+            end
+            it "does not pass entries that do not conform to any ruleset to block passed to #parse_entrie" do
+              ruleset.stub!(:conformed?).and_return(false)
+              count = 0
+              @parser.parse_entries(@log_file) do |entry|
+                count += 1
+              end
+              count.should == 0
+            end
           end
         end
         context "handling invalid entries" do
