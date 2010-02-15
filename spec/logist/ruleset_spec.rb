@@ -19,7 +19,7 @@ module Logist
         @rset.add(mock(Rule))
       }.should change { @rset.rules.size }.by(1)
     end
-    context "checking agains an entry" do
+    context "checking against an entry" do
       let(:entry) { mock(Entry).as_null_object }
       let(:rule1) { mock(Rule).as_null_object }
       let(:rule2) { mock(Rule).as_null_object }
