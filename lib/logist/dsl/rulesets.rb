@@ -13,6 +13,22 @@ module Logist
         def initialize(ruleset)
           @ruleset = ruleset
         end
+        
+        def method_missing(method, *args)
+          if not (klass = get_rule_class(method)).nil?
+            @ruleset.add klass.new(*args)
+          else
+            super(method, *args)
+          end
+        end
+        
+        private
+        
+          def get_rule_class(sym, base = Logist::Rules)
+             base.const_get sym.to_s.split(/_/).map { |w| w.capitalize}.join('').to_sym
+          rescue
+             nil
+          end
       end
     end
   end
