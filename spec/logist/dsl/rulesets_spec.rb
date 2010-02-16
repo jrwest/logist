@@ -46,5 +46,23 @@ describe "RuleSets DSL" do
         }.should raise_error NoMethodError
       end
     end
+    it "works in a full example" do
+      example_entry = mock(Logist::Entry, :first_field      => "a",
+                                          :second_field     => 2,
+                                          :third_field      => "abc",
+                                          :fourth_field     => "abc")
+
+      ruleset :example_ruleset do 
+        exists          :first_field
+        is_in           :second_field, [1, 2, 3]
+        matches         :third_field, /^abc$/
+        does_not_match  :fourth_field, /^def$/
+      end
+      Logist::RuleSet[:example_ruleset].rules.size.should == 4
+      Logist::RuleSet[:example_ruleset].should be_conformed(example_entry)
+      
+      example_entry.stub(:second_field).and_return(5)
+      Logist::RuleSet[:example_ruleset].should_not be_conformed(example_entry)
+    end
   end
 end
